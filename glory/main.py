@@ -7,15 +7,18 @@ and configures the dependencies.
 """
 
 import os
+import base64
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pathlib import Path
+from typing import List, Dict, Any
 
 # Import the framework
 import framework_hexagonal as fh
 from framework_hexagonal.adapters.outbound.playwright_screenshot import PlaywrightScreenshotterAdapter
+from framework_hexagonal.adapters.outbound.openai_text import OpenAITextAdapter
 
 # Create FastAPI app
 app = FastAPI(
@@ -41,11 +44,24 @@ async def startup_event():
         fh.Screenshotter,
         PlaywrightScreenshotterAdapter(),
     )
+    
+    # Register OpenAI text adapter
+    fh.container.register(
+        fh.TextAI,
+        OpenAITextAdapter(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+            default_model="gpt-4o",
+        ),
+    )
 
-# Dependency to get screenshotter
+# Dependencies to get adapters
 def get_screenshotter():
     """Get Screenshotter adapter from container."""
     return fh.container.get(fh.Screenshotter)
+
+def get_text_ai():
+    """Get TextAI adapter from container."""
+    return fh.container.get(fh.TextAI)
 
 # Routes
 @app.get("/", response_class=HTMLResponse)
@@ -73,7 +89,8 @@ async def cro_optimizer(request: Request, error: str = None):
 async def analyze_website(
     request: Request,
     website_url: str = Form(...),
-    screenshotter: fh.Screenshotter = Depends(get_screenshotter)
+    screenshotter: fh.Screenshotter = Depends(get_screenshotter),
+    text_ai: fh.TextAI = Depends(get_text_ai)
 ):
     """Take a screenshot of the website and perform CRO analysis."""
     # Generate a unique filename for the screenshot
@@ -93,15 +110,57 @@ async def analyze_website(
         # Save the screenshot
         with open(filepath, "wb") as f:
             f.write(screenshot_bytes)
-            
-        # Render the results page
+        
+        # Construct full URL to the screenshot
+        base_url = str(request.base_url).rstrip('/')
+        screenshot_url = f"{base_url}{screenshot_path}"
+        
+        # Define CRO analysis prompt
+        cro_prompt = """
+        Here is a screenshot of a web page. Please provide a detailed Conversion Rate Optimization (CRO) analysis.
+        Focus especially on:
+
+        Call-to-action (CTA) placement and clarity
+        Headline effectiveness
+        Layout and visual hierarchy
+        Use of whitespace and readability
+        Trust-building elements (social proof, testimonials, etc.)
+        Mobile responsiveness (if possible to evaluate from image)
+        Anything else that could improve user conversion or reduce friction
+
+        Suggest concrete, prioritized improvements that would likely increase conversions, and explain why they work.
+
+        Assume the goal of the page is to get users to sign up / request a demo / buy a product (you can specify depending on your page).
+        """
+        
+        # Create messages including the image
+        messages = [
+            {"role": "system", "content": "You are a CRO expert analyzing a website screenshot."},
+            {"role": "user", "content": [
+                {"type": "text", "text": cro_prompt},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": screenshot_url
+                    }
+                }
+            ]}
+        ]
+        
+        # Get analysis from OpenAI
+        analysis = ""
+        async for chunk in text_ai.chat(messages=messages):
+            analysis += chunk
+        
+        # Render the results page with the analysis
         return templates.TemplateResponse(
             "tools/cro_results.html",
             {
                 "request": request,
                 "website_url": website_url,
                 "screenshot_path": screenshot_path,
-                "full_page": True
+                "full_page": True,
+                "analysis": analysis
             }
         )
     except Exception as e:
@@ -116,8 +175,51 @@ async def analyze_website(
             # Save the screenshot
             with open(filepath, "wb") as f:
                 f.write(screenshot_bytes)
-                
-            # Render the results page with a note about viewport
+            
+            # Construct full URL to the screenshot
+            base_url = str(request.base_url).rstrip('/')
+            screenshot_url = f"{base_url}{screenshot_path}"
+            
+            # Define CRO analysis prompt
+            cro_prompt = """
+            Here is a screenshot of a web page. Please provide a detailed Conversion Rate Optimization (CRO) analysis.
+            Focus especially on:
+
+            Call-to-action (CTA) placement and clarity
+            Headline effectiveness
+            Layout and visual hierarchy
+            Use of whitespace and readability
+            Trust-building elements (social proof, testimonials, etc.)
+            Mobile responsiveness (if possible to evaluate from image)
+            Anything else that could improve user conversion or reduce friction
+
+            Suggest concrete, prioritized improvements that would likely increase conversions, and explain why they work.
+
+            Assume the goal of the page is to get users to sign up / request a demo / buy a product (you can specify depending on your page).
+
+            NOTE: This is only a partial screenshot showing the visible viewport.
+            """
+            
+            # Create messages including the image
+            messages = [
+                {"role": "system", "content": "You are a CRO expert analyzing a website screenshot."},
+                {"role": "user", "content": [
+                    {"type": "text", "text": cro_prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": screenshot_url
+                        }
+                    }
+                ]}
+            ]
+            
+            # Get analysis from OpenAI
+            analysis = ""
+            async for chunk in text_ai.chat(messages=messages):
+                analysis += chunk
+            
+            # Render the results page with the analysis and a note about viewport
             return templates.TemplateResponse(
                 "tools/cro_results.html",
                 {
@@ -125,7 +227,8 @@ async def analyze_website(
                     "website_url": website_url,
                     "screenshot_path": screenshot_path,
                     "full_page": False,
-                    "error_note": "Only viewport captured (page too large for full screenshot)"
+                    "error_note": "Only viewport captured (page too large for full screenshot)",
+                    "analysis": analysis
                 }
             )
         except Exception as e2:
@@ -147,7 +250,7 @@ if __name__ == "__main__":
     
     # Run the application
     uvicorn.run(
-        "glory.main:app",
+        "main:app",
         host="0.0.0.0",
         port=port,
         reload=True,
