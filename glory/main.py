@@ -111,9 +111,8 @@ async def analyze_website(
         with open(filepath, "wb") as f:
             f.write(screenshot_bytes)
         
-        # Construct full URL to the screenshot
-        base_url = str(request.base_url).rstrip('/')
-        screenshot_url = f"{base_url}{screenshot_path}"
+        # Encode the screenshot as base64
+        base64_image = base64.b64encode(screenshot_bytes).decode('utf-8')
         
         # Define CRO analysis prompt
         cro_prompt = """
@@ -133,7 +132,7 @@ async def analyze_website(
         Assume the goal of the page is to get users to sign up / request a demo / buy a product (you can specify depending on your page).
         """
         
-        # Create messages including the image
+        # Create messages including the base64-encoded image
         messages = [
             {"role": "system", "content": "You are a CRO expert analyzing a website screenshot."},
             {"role": "user", "content": [
@@ -141,7 +140,7 @@ async def analyze_website(
                 {
                     "type": "image_url",
                     "image_url": {
-                        "url": screenshot_url
+                        "url": f"data:image/png;base64,{base64_image}"
                     }
                 }
             ]}
@@ -176,9 +175,8 @@ async def analyze_website(
             with open(filepath, "wb") as f:
                 f.write(screenshot_bytes)
             
-            # Construct full URL to the screenshot
-            base_url = str(request.base_url).rstrip('/')
-            screenshot_url = f"{base_url}{screenshot_path}"
+            # Encode the screenshot as base64
+            base64_image = base64.b64encode(screenshot_bytes).decode('utf-8')
             
             # Define CRO analysis prompt
             cro_prompt = """
@@ -200,7 +198,7 @@ async def analyze_website(
             NOTE: This is only a partial screenshot showing the visible viewport.
             """
             
-            # Create messages including the image
+            # Create messages including the base64-encoded image
             messages = [
                 {"role": "system", "content": "You are a CRO expert analyzing a website screenshot."},
                 {"role": "user", "content": [
@@ -208,7 +206,7 @@ async def analyze_website(
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": screenshot_url
+                            "url": f"data:image/png;base64,{base64_image}"
                         }
                     }
                 ]}
