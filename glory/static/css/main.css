@@ -53,14 +53,14 @@ body {
 
 /* Button styles */
 .btn-gradient {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background-image: linear-gradient(to right, #4f46e5, #7e22ce);
   color: white;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .btn-gradient:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Custom focus styles */
@@ -190,4 +190,32 @@ body {
 .tooltip:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+/* Custom styles for Growth Stack */
+
+/* Screenshot display */
+.screenshot-container {
+  max-height: 800px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Make sure screenshots don't overflow their container */
+.screenshot-img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Add some spacing between elements */
+.section-spacing {
+  margin-bottom: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .screenshot-container {
+    max-height: 500px;
+  }
 } 

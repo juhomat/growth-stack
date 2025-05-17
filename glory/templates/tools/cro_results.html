@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}CRO Analysis Results - Growth Stack{% endblock %}
+
+{% block content %}
+<!-- Results Header -->
+<section class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg p-8 mb-8 text-white">
+    <div class="max-w-3xl">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">CRO Analysis Results</h1>
+        <p class="text-lg mb-2 opacity-90">Website Analysis for: <a href="{{ website_url }}" target="_blank" class="font-semibold underline">{{ website_url }}</a></p>
+        {% if error_note %}
+            <p class="text-sm bg-yellow-200 text-yellow-800 p-2 rounded-lg inline-block mt-2">{{ error_note }}</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Screenshot Section -->
+<section class="bg-white rounded-xl shadow-md p-8 mb-8">
+    <h2 class="text-2xl font-bold mb-6">Website Screenshot</h2>
+    
+    <div class="screenshot-container mb-4">
+        <img src="{{ screenshot_path }}" alt="Screenshot of {{ website_url }}" class="screenshot-img">
+    </div>
+    
+    <div class="flex justify-between mt-4">
+        <a href="{{ screenshot_path }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-medium">
+            View Full Size Screenshot
+        </a>
+        <a href="/tools/cro-optimizer" class="text-gray-600 hover:text-gray-800 font-medium">
+            Back to CRO Optimizer
+        </a>
+    </div>
+</section>
+
+<!-- Analysis Actions -->
+<section class="bg-white rounded-xl shadow-md p-8 mb-8">
+    <h2 class="text-2xl font-bold mb-6">CRO Analysis</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="border border-gray-200 rounded-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">Visual Analysis</h3>
+            <p class="text-gray-700 mb-4">Check how your website appears to visitors and identify visual issues that may impact conversion rates.</p>
+            <ul class="text-gray-600 list-disc pl-5 mb-4">
+                <li>Review the layout and visual hierarchy</li>
+                <li>Evaluate call-to-action visibility</li>
+                <li>Assess mobile responsiveness</li>
+            </ul>
+        </div>
+        
+        <div class="border border-gray-200 rounded-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">Content Analysis</h3>
+            <p class="text-gray-700 mb-4">Evaluate your website's messaging and content structure to improve engagement and conversions.</p>
+            <ul class="text-gray-600 list-disc pl-5 mb-4">
+                <li>Review headline effectiveness</li>
+                <li>Assess value proposition clarity</li>
+                <li>Evaluate content readability</li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %} 

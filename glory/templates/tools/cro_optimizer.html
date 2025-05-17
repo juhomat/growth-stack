@@ -12,6 +12,13 @@
     </div>
 </section>
 
+{% if error %}
+<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8" role="alert">
+    <p class="font-bold">Error</p>
+    <p>{{ error }}</p>
+</div>
+{% endif %}
+
 <!-- Introduction Section -->
 <section class="bg-white rounded-xl shadow-md p-8 mb-8">
     <h2 class="text-2xl font-bold mb-4">What is CRO?</h2>
