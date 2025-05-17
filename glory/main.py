@@ -7,7 +7,7 @@ and configures the dependencies.
 """
 
 import os
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -73,7 +73,7 @@ async def cro_optimizer(request: Request, error: str = None):
 async def analyze_website(
     request: Request,
     website_url: str = Form(...),
-    screenshotter: fh.Screenshotter = fh.Depends(get_screenshotter)
+    screenshotter: fh.Screenshotter = Depends(get_screenshotter)
 ):
     """Take a screenshot of the website and perform CRO analysis."""
     # Generate a unique filename for the screenshot
