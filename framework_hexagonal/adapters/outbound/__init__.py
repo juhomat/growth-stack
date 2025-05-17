@@ -1,0 +1,1 @@
+"""Outbound adapters package for the hexagonal framework.""" 
