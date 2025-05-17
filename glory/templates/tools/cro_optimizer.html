@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}CRO Optimizer - Growth Stack{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg p-8 mb-8 text-white">
+    <div class="max-w-3xl">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">CRO Optimizer</h1>
+        <p class="text-lg mb-2 opacity-90">Analyze your website and get actionable recommendations to increase conversion rates.</p>
+        <p class="text-md opacity-80">Powered by AI-driven analysis of best practices and user behavior patterns.</p>
+    </div>
+</section>
+
+<!-- Introduction Section -->
+<section class="bg-white rounded-xl shadow-md p-8 mb-8">
+    <h2 class="text-2xl font-bold mb-4">What is CRO?</h2>
+    
+    <div class="prose max-w-none">
+        <p class="text-gray-700 mb-4">
+            <strong>Conversion Rate Optimization (CRO)</strong> is the systematic process of increasing the percentage of website visitors who take a desired action — be it filling out a form, becoming customers, or otherwise. CRO involves understanding how users move through your site, what actions they take, and what's stopping them from completing your goals.
+        </p>
+        
+        <h3 class="text-xl font-semibold mt-6 mb-3">How Our CRO Optimizer Works:</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <div class="bg-gray-50 p-5 rounded-lg">
+                <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h4 class="font-semibold mb-2">1. Analysis</h4>
+                <p class="text-gray-600">Our tool scans your entire website, analyzing page elements, user flows, and conversion points.</p>
+            </div>
+            
+            <div class="bg-gray-50 p-5 rounded-lg">
+                <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <h4 class="font-semibold mb-2">2. Benchmarking</h4>
+                <p class="text-gray-600">We compare your site against industry best practices and high-converting competitors.</p>
+            </div>
+            
+            <div class="bg-gray-50 p-5 rounded-lg">
+                <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                    </svg>
+                </div>
+                <h4 class="font-semibold mb-2">3. Recommendations</h4>
+                <p class="text-gray-600">Receive prioritized, actionable improvements to increase your conversion rates.</p>
+            </div>
+        </div>
+        
+        <p class="text-gray-700 mt-6">
+            Our AI-powered tool identifies the most impactful changes you can make to your website to improve user experience and boost conversions. Enter your website URL below to get started.
+        </p>
+    </div>
+</section>
+
+<!-- Input Form Section -->
+<section class="bg-white rounded-xl shadow-md p-8">
+    <h2 class="text-2xl font-bold mb-6">Analyze Your Website</h2>
+    
+    <form id="cro-optimizer-form" action="/tools/cro-optimizer/analyze" method="post" class="space-y-6">
+        <div>
+            <label for="website-url" class="block text-sm font-medium text-gray-700 mb-1">Website URL</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                </div>
+                <input type="url" name="website_url" id="website-url" class="pl-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md py-3" placeholder="https://example.com" required>
+            </div>
+            <p class="mt-2 text-sm text-gray-500">Enter the full URL including https:// or http://</p>
+        </div>
+        
+        <div>
+            <button type="submit" class="btn-gradient w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:shadow-lg transition-all bg-gradient-to-r from-indigo-600 to-purple-600">
+                Analyze Website
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %} 

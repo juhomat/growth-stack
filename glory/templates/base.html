@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Growth Stack - Marketing & Sales Tools{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-900 font-inter min-h-screen">
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <a href="/" class="text-xl font-semibold">Growth Stack</a>
+                </div>
+                
+                <!-- Main Navigation -->
+                <nav class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+                    <!-- Home - no dropdown -->
+                    <a href="/" class="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Home</a>
+                    
+                    <!-- Website dropdown -->
+                    <div class="group relative">
+                        <button class="text-gray-700 font-medium hover:text-indigo-600 transition-colors flex items-center">
+                            Website
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div class="hidden group-hover:block absolute left-0 mt-0 w-48 z-10">
+                            <div class="h-2 w-full"></div>
+                            <div class="bg-white shadow-lg rounded-md py-2">
+                                <a href="/tools/cro-optimizer" class="block px-4 py-2 text-gray-800 hover:bg-indigo-100 hover:text-indigo-600">CRO Optimizer</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-1 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 absolute top-4 right-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Navigation Menu (hidden by default) -->
+    <div class="md:hidden hidden bg-white shadow-lg p-4" id="mobile-menu">
+        <nav class="flex flex-col space-y-3">
+            <a href="/" class="text-indigo-600 font-medium">Home</a>
+            
+            <!-- Website dropdown (mobile) -->
+            <div class="mobile-dropdown">
+                <button class="text-gray-700 font-medium flex items-center justify-between w-full" onclick="toggleMobileDropdown(this)">
+                    Website
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 dropdown-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="mobile-dropdown-content hidden bg-gray-100 mt-1 rounded-md py-2">
+                    <a href="/tools/cro-optimizer" class="block px-4 py-2 text-gray-800 hover:bg-indigo-100 hover:text-indigo-600">CRO Optimizer</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Growth Stack</h3>
+                    <p class="text-gray-400">Comprehensive digital marketing and sales tools to grow your business.</p>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">Tools</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/tools/cro-optimizer" class="text-gray-400 hover:text-white transition-colors">CRO Optimizer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400">&copy; 2023 Growth Stack. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom CSS for Dropdowns -->
+    <style>
+        /* Add rotation animation for dropdown icons */
+        .dropdown-icon {
+            transition: transform 0.2s ease;
+        }
+        
+        .dropdown-icon.rotate-180 {
+            transform: rotate(180deg);
+        }
+        
+        /* Ensure dropdown menus display properly */
+        .mobile-dropdown-content {
+            transition: all 0.3s ease;
+        }
+        
+        /* Add hover effect for desktop dropdowns */
+        @media (min-width: 768px) {
+            .group:hover .absolute {
+                display: block;
+                animation: fadeInDown 0.3s ease forwards;
+            }
+            
+            /* Add a hover buffer to prevent the dropdown from disappearing */
+            .group {
+                padding-bottom: 2px;
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', path='js/app.js') }}"></script>
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('button.md\\:hidden');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            {% block domready_js %}{% endblock %}
+        });
+    </script>
+    
+    <!-- Mobile dropdown toggle function -->
+    <script>
+        function toggleMobileDropdown(button) {
+            // Get the dropdown content
+            const content = button.nextElementSibling;
+            
+            // Toggle the content display
+            content.classList.toggle('hidden');
+            
+            // Toggle the icon rotation
+            const icon = button.querySelector('.dropdown-icon');
+            icon.classList.toggle('transform');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

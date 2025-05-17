@@ -7,10 +7,10 @@ and configures the dependencies.
 """
 
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pathlib import Path
 
 # Create FastAPI app
@@ -35,6 +35,30 @@ async def home(request: Request):
             "request": request,
         },
     )
+
+@app.get("/tools/cro-optimizer", response_class=HTMLResponse)
+async def cro_optimizer(request: Request):
+    """Render the CRO Optimizer tool page."""
+    return templates.TemplateResponse(
+        "tools/cro_optimizer.html",
+        {
+            "request": request,
+        },
+    )
+
+@app.post("/tools/cro-optimizer/analyze")
+async def analyze_website(
+    request: Request,
+    website_url: str = Form(...)
+):
+    """Handle CRO Optimizer form submission.
+    
+    Currently, this is a placeholder for future functionality.
+    In the future, this will process the website URL and perform analysis.
+    """
+    # Placeholder for future functionality
+    # For now, just redirect back to the tool page
+    return RedirectResponse(url="/tools/cro-optimizer", status_code=303)
 
 # Main entry point
 if __name__ == "__main__":
